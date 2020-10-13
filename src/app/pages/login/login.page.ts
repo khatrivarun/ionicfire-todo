@@ -2,6 +2,7 @@ import { Router } from '@angular/router';
 import { AuthService } from './../../services/auth/auth.service';
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { AlertController, LoadingController } from '@ionic/angular';
 
 @Component({
   selector: 'app-login',
@@ -15,7 +16,8 @@ export class LoginPage implements OnInit {
   constructor(
     private readonly formBuilder: FormBuilder,
     private readonly authService: AuthService,
-    private readonly router: Router
+    private readonly router: Router,
+    private readonly alertController: AlertController
   ) {}
 
   ngOnInit() {
@@ -37,14 +39,22 @@ export class LoginPage implements OnInit {
       console.log('Not Valid');
     } else {
       this.authService
-        .signInWithEmailAndPassword(
+        .loginWithEmailAndPassword(
           this.loginForm.value.email,
           this.loginForm.value.password
         )
         .then(() => {
           this.router.navigate(['home']);
         })
-        .catch((error) => console.log(error));
+        .catch((error) => {
+          this.alertController
+            .create({
+              header: 'Error while logging in',
+              message: error.message,
+              buttons: ['OKAY'],
+            })
+            .then((result) => result.present());
+        });
     }
   }
 
@@ -54,6 +64,14 @@ export class LoginPage implements OnInit {
       .then(() => {
         this.router.navigate(['home']);
       })
-      .catch((error) => console.log(error));
+      .catch((error) =>
+        this.alertController
+          .create({
+            header: 'Error while signing in',
+            message: error.message,
+            buttons: ['OKAY'],
+          })
+          .then((result) => result.present())
+      );
   }
 }
