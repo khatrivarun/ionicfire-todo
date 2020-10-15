@@ -1,3 +1,4 @@
+import { User } from './../../models/user.model';
 import { Injectable } from '@angular/core';
 import { AngularFireAuth } from '@angular/fire/auth';
 import { auth } from 'firebase/app';
@@ -6,7 +7,26 @@ import { auth } from 'firebase/app';
   providedIn: 'root',
 })
 export class AuthService {
-  constructor(private readonly angularFireAuth: AngularFireAuth) {}
+  private user: User;
+
+  constructor(private readonly angularFireAuth: AngularFireAuth) {
+    this.user = null;
+  }
+
+  private async setUser(): Promise<void> {
+    const firebaseUser = await this.angularFireAuth.currentUser;
+
+    if (firebaseUser) {
+      this.user = {
+        uid: firebaseUser.uid,
+        name: firebaseUser.displayName,
+      };
+    }
+  }
+
+  get loggedInUser() {
+    return this.user;
+  }
 
   public async signInWithEmailAndPassword(
     email: string,
@@ -17,6 +37,8 @@ export class AuthService {
         email,
         password
       );
+
+      await this.setUser();
     } catch (error) {
       const code = error.code;
 
@@ -38,6 +60,8 @@ export class AuthService {
   ): Promise<void> {
     try {
       await this.angularFireAuth.signInWithEmailAndPassword(email, password);
+
+      await this.setUser();
     } catch (error) {
       const code = error.code;
 
@@ -56,14 +80,8 @@ export class AuthService {
   public async signInWithGoogle(): Promise<void> {
     try {
       await this.angularFireAuth.signInWithPopup(new auth.GoogleAuthProvider());
-    } catch (error) {
-      console.log(error);
-    }
-  }
 
-  public async signOut(): Promise<void> {
-    try {
-      await this.angularFireAuth.signOut();
+      await this.setUser();
     } catch (error) {
       const code = error.code;
 
@@ -82,6 +100,16 @@ export class AuthService {
       } else if (code === 'auth/popup-closed-by-user') {
         throw new Error('Popup closed by user');
       }
+    }
+  }
+
+  public async signOut(): Promise<void> {
+    try {
+      await this.angularFireAuth.signOut();
+
+      this.user = null;
+    } catch (error) {
+      console.log(error);
     }
   }
 }

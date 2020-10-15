@@ -4,14 +4,31 @@ import { PreloadAllModules, RouterModule, Routes } from '@angular/router';
 
 const routes: Routes = [
   {
-    path: 'home',
-    loadChildren: () =>
-      import('./pages/home/home.module').then((m) => m.HomePageModule),
+    path: 'todos',
     canActivate: [AuthGuard],
+    children: [
+      {
+        path: '',
+        loadChildren: () =>
+          import('./pages/todos/todos.module').then((m) => m.TodosPageModule),
+      },
+      {
+        path: ':id',
+        loadChildren: () =>
+          import('./pages/todo/todo.module').then((m) => m.TodoPageModule),
+      },
+      {
+        path: ':id/update',
+        loadChildren: () =>
+          import('./pages/todo-form/todo-form.module').then(
+            (m) => m.TodoFormPageModule
+          ),
+      },
+    ],
   },
   {
     path: '',
-    redirectTo: 'home',
+    redirectTo: 'todos',
     pathMatch: 'full',
   },
   {
