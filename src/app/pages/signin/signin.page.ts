@@ -1,3 +1,4 @@
+import { TodoService } from 'src/app/services/todos/todo.service';
 import { AlertController } from '@ionic/angular';
 import { AuthService } from './../../services/auth/auth.service';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
@@ -16,6 +17,7 @@ export class SigninPage implements OnInit {
   constructor(
     private readonly formBuilder: FormBuilder,
     private readonly authService: AuthService,
+    private readonly todoService: TodoService,
     private readonly router: Router,
     private readonly alertController: AlertController
   ) {}
@@ -55,7 +57,8 @@ export class SigninPage implements OnInit {
           this.signInForm.value.password
         )
         .then(() => {
-          this.router.navigate(['home']);
+          this.todoService.fetch();
+          this.router.navigate(['todos']);
         })
         .catch((error) =>
           this.alertController
@@ -73,7 +76,8 @@ export class SigninPage implements OnInit {
     this.authService
       .signInWithGoogle()
       .then(() => {
-        this.router.navigate(['home']);
+        this.todoService.fetch();
+        this.router.navigate(['todos']);
       })
       .catch((error) =>
         this.alertController

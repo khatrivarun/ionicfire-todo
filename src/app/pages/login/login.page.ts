@@ -3,6 +3,7 @@ import { AuthService } from './../../services/auth/auth.service';
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { AlertController, LoadingController } from '@ionic/angular';
+import { TodoService } from 'src/app/services/todos/todo.service';
 
 @Component({
   selector: 'app-login',
@@ -16,6 +17,7 @@ export class LoginPage implements OnInit {
   constructor(
     private readonly formBuilder: FormBuilder,
     private readonly authService: AuthService,
+    private readonly todoService: TodoService,
     private readonly router: Router,
     private readonly alertController: AlertController
   ) {}
@@ -35,7 +37,7 @@ export class LoginPage implements OnInit {
 
   onSubmit() {
     this.isSubmitted = true;
-    if (!this.loginForm.valid) {
+    if (this.loginForm.valid) {
       console.log('Not Valid');
     } else {
       this.authService
@@ -44,7 +46,8 @@ export class LoginPage implements OnInit {
           this.loginForm.value.password
         )
         .then(() => {
-          this.router.navigate(['home']);
+          this.todoService.fetch();
+          this.router.navigate(['todos']);
         })
         .catch((error) => {
           this.alertController
@@ -62,7 +65,8 @@ export class LoginPage implements OnInit {
     this.authService
       .signInWithGoogle()
       .then(() => {
-        this.router.navigate(['home']);
+        this.todoService.fetch();
+        this.router.navigate(['todos']);
       })
       .catch((error) =>
         this.alertController

@@ -1,12 +1,12 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 
-import { TodoFormPage } from './todo-form.page';
+import { AddTodoPage } from './add-todo.page';
 
 const routes: Routes = [
   {
     path: '',
-    component: TodoFormPage
+    component: AddTodoPage
   }
 ];
 
@@ -14,4 +14,4 @@ const routes: Routes = [
   imports: [RouterModule.forChild(routes)],
   exports: [RouterModule],
 })
-export class TodoFormPageRoutingModule {}
+export class AddTodoPageRoutingModule {}

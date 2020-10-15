@@ -1,9 +1,36 @@
 <ion-header>
   <ion-toolbar>
-    <ion-title>todo</ion-title>
+    <ion-title>Todo</ion-title>
+
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="todos"></ion-back-button>
+    </ion-buttons>
+
+    <ion-buttons slot="end">
+      <ion-button routerLink="../update">
+        <ion-icon name="pencil-outline"></ion-icon>
+      </ion-button>
+
+      <ion-button (click)="onDelete()">
+        <ion-icon name="trash-outline"></ion-icon>
+      </ion-button>
+    </ion-buttons>
   </ion-toolbar>
 </ion-header>
 
 <ion-content>
+
+  <ion-card>
+
+    <ion-card-header>
+      <ion-card-subtitle>Your todo</ion-card-subtitle>
+      <ion-card-title>Description</ion-card-title>
+    </ion-card-header>
+
+    <ion-card-content>
+      <ion-label>{{ todo.description }}</ion-label>
+    </ion-card-content>
+
+  </ion-card>
 
 </ion-content>

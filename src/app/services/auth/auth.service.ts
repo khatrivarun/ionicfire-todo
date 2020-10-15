@@ -28,6 +28,10 @@ export class AuthService {
     return this.user;
   }
 
+  setLoggedInUser(user: User) {
+    this.user = user;
+  }
+
   public async signInWithEmailAndPassword(
     email: string,
     password: string
