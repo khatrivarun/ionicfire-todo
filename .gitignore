@@ -33,3 +33,6 @@ npm-debug.log*
 # Firebase
 src/environments/firebase.config.ts
 .firebase/
+
+# Android
+android/
